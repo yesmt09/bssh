@@ -1,0 +1,7 @@
+{
+  "Port": "2222",
+  "Password": "123",
+  "Command": [
+    "php"
+  ]
+}
