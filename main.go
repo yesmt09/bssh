@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 type _config struct {
@@ -24,25 +25,33 @@ func main() {
 	ssh.Handle(func(session ssh.Session) {
 		_, _, isPty := session.Pty()
 		if isPty == false {
-			cmd := exec.Command(session.RawCommand())
-			stdout, err := cmd.Output()
-			if err != nil {
-				fmt.Println(err.Error())
-				return
+			commandString := strings.Join(session.Command(), " ")
+			i := strings.Index(commandString, "&&")
+			commandList := []string{}
+			if i != 0 {
+				commandList = strings.Split(commandString, "&&")
+			} else {
+				commandList = append(commandList, commandString)
 			}
-			cmd.Wait()
-			io.WriteString(session, string(stdout))
+			var _stdout []byte
+			for _, v := range commandList {
+				command := strings.Split(v, " ")
+				fmt.Println(strings.Join(command[1:], " "))
+				cmd := exec.Command(strings.Trim(command[0]," "), command[1:]...)
+				fmt.Println(strings.Join(session.Command()[1:], " "))
+				stdout, _ := cmd.Output()
+				_stdout = append(_stdout, stdout...)
+				cmd.Wait()
+			}
+
+			io.WriteString(session, string(_stdout))
 		} else {
 			io.WriteString(session, "No Allow PTY requested.\n")
 			session.Exit(1)
 		}
 	})
 
-	ssh.ListenAndServe(":"+config.Port, nil,
-		ssh.PasswordAuth(func(ctx ssh.Context, pass string) bool {
-			return pass == config.Password
-		}),
-	)
+	ssh.ListenAndServe("127.0.0.1:"+config.Port, nil)
 }
 
 //初始化配置
