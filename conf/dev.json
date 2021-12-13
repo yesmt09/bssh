@@ -1,0 +1,8 @@
+{
+  "password": "1",
+  "user": "machao",
+  "command": [
+    "ls",
+    "sleep"
+  ]
+}

@@ -1,8 +1,0 @@
-{
-  "listen": "127.0.0.1:2222",
-  "password": "1",
-  "user": "machao",
-  "command": [
-    "ls"
-  ]
-}
