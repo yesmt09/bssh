@@ -53,8 +53,8 @@ func GetFlag(cFlag *conf.CFlags) {
 
 func getVersionOrUpdate() {
 	if printVersion == true {
-		fmt.Println(conf.Version)
-		fmt.Println(conf.Build)
+		fmt.Println("version: " + conf.Version)
+		fmt.Println("build: " + conf.Build)
 		os.Exit(0)
 	}
 	if update == true {

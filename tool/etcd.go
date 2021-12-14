@@ -21,8 +21,9 @@ var (
 	client *clientv3.Client
 	file string
 	path string
-	version string
-	BuildDate string
+	Version string
+	Build string
+	printVersion bool
 )
 
 func init()  {
@@ -33,7 +34,13 @@ func init()  {
 	flag.StringVar(&hostList, "h", "", "etcd 主机列表")
 	flag.StringVar(&username, "u", "", "用户名")
 	flag.StringVar(&password, "p", "", "密码")
+	flag.BoolVar(&printVersion, "v", false, "版本")
 	flag.Parse()
+	if printVersion {
+		fmt.Println("version: " + Version)
+		fmt.Println("build: " + Build)
+		os.Exit(0)
+	}
 }
 
 func main()  {
