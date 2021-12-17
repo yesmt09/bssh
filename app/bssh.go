@@ -77,14 +77,17 @@ func serverHandle(session ssh.Session) {
 			commandList = append(commandList, commandString)
 		}
 		var _stdout []byte
+		var err error
 		for _, commands := range commandList {
 			//过滤命令，有违规的命令则不执行
-			command, err := helper.FilterCommand(commands, baseConf)
+			_, err = helper.FilterCommand(commands, baseConf)
 			if err != nil {
 				repMsg = err.Error()
 				break
 			}
-			cmd := exec.Command(command[0], command[1:]...)
+		}
+		if err == nil {
+			cmd := exec.Command("bash","-c", commandString)
 			stdout, err := cmd.Output()
 			if err != nil {
 				stdout = []byte(err.Error())

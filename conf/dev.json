@@ -3,6 +3,9 @@
   "user": "machao",
   "command": [
     "ls",
-    "sleep"
+    "sleep",
+    "cd",
+    "pwd",
+    "echo"
   ]
 }
