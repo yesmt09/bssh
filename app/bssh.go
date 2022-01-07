@@ -6,11 +6,10 @@ import (
 	"bssh/helper"
 	"flag"
 	"fmt"
+	"github.com/gliderlabs/ssh"
 	"os"
 	"os/exec"
 	"strings"
-
-	"github.com/gliderlabs/ssh"
 )
 
 var (
@@ -90,12 +89,16 @@ func serverHandle(session ssh.Session) {
 			cmd := exec.Command("bash","-c", commandString)
 			stdout, err := cmd.Output()
 			if err != nil {
+				if exitError, ok := err.(*exec.ExitError); ok {
+					repCode = exitError.ExitCode()
+				}
 				stdout = []byte(err.Error())
+			} else {
+				repCode = 0
 			}
 			_stdout = append(_stdout, stdout...)
 			cmd.Wait()
 			repMsg = string(_stdout)
-			repCode = 0
 		}
 	}
 	logger.Info(repMsg)
